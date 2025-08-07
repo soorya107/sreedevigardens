@@ -385,29 +385,9 @@ body.offcanvas-menu .site-navbar {
   height: 100vh;
   min-height: 700px; }
 
-.site-hero {.site-hero {
-  background-size: cover;
-  background-position: center center;
-  background-repeat: no-repeat;
-  height: 100vh;
-  min-height: 700px;
-  width: 100%;
-  position: relative;
-  overflow: hidden;
-}
 
-/* Slightly zoom out on mobile devices */
-@media (max-width: 576px) {
-  .site-hero {
-    background-size: 90; /* Default is 'cover', override with less zoom */
-  }
-}
 
-  background-size: cover;
-  height: 100vh;
-  min-height: 700px;
-  width: 100%;
-  position: relative; }
+
   .site-hero .heading {
     font-family: "Playfair Display", times, serif;
     font-weight: bold; }
