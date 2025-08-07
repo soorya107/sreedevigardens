@@ -35,10 +35,11 @@
 /* Zooms out hero image on mobile, keeps it always filled */
 @media (max-width: 767.98px) {
   .site-hero {
-    height: 60vh;
-    min-height: 320px;
+    height: 45vh;        /* Lower height = more of the image visible */
+    min-height: 220px;   /* Lower min-height for small screens */
     background-size: cover;
     background-position: center center;
+    background-color: #fff; /* Ensures any gap is white, not gray */
   }
 }
 
