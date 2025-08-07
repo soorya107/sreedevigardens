@@ -384,13 +384,16 @@ body.offcanvas-menu .site-navbar {
 .full-height {
   height: 100vh;
   min-height: 700px; }
+@media (max-width: 768px) {
+  .site-hero {
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center top;
+    height: auto;
+    min-height: auto;
+  }
+}
 
-.site-hero {
-  background-size: cover;
-  height: 100vh;
-  min-height: 700px;
-  width: 100%;
-  position: relative; }
   .site-hero .heading {
     font-family: "Playfair Display", times, serif;
     font-weight: bold; }
