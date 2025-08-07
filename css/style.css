@@ -399,7 +399,7 @@ body.offcanvas-menu .site-navbar {
 /* Slightly zoom out on mobile devices */
 @media (max-width: 576px) {
   .site-hero {
-    background-size: contain; /* Default is 'cover', override with less zoom */
+    background-size: 85; /* Default is 'cover', override with less zoom */
   }
 }
 
