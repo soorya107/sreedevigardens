@@ -376,7 +376,7 @@ Just minutes from the airport, yet miles from stress</p>
 <div class="col-md-6">
   <div class="card shadow-sm">
     <a data-fancybox="familyRooms" href="images/roomhehe.webp" class="position-relative d-block hover-parent">
-  <img src="images/roomhehe.webp" class="img-fluid" style="height: 300px; object-fit: cover; object-position: center 70%; ">
+ <img src="images/roomhehe.webp" class="img-fluid" style="height: 300px; object-fit: cover; object-position: center 70%;" loading="lazy">
   <div class="hover-arrow">📷 More Photos</div>
 </a>
 
@@ -988,21 +988,63 @@ Please confirm availability.`);
     }
   });
 </script><!-- ...existing code... -->
+<!-- Lazy-init gallery: initializes Owl Carousel + Fancybox only when gallery is visible -->
 <script>
-  $(document).ready(function(){
-    $('.owl-carousel').owlCarousel({
-      items: 3,
-      loop: true,
-      margin: 10,
-      nav: true,
-      dots: true,
-      responsive: {
-        0: { items: 1 },
-        600: { items: 2 },
-        1000: { items: 3 }
+  (function() {
+    const gallerySelector = '.home-slider.owl-carousel';
+    const galleryEl = document.querySelector(gallerySelector);
+    if (!galleryEl) return;
+
+    function initOwl() {
+      if (window.jQuery && jQuery().owlCarousel && !$(gallerySelector).data('owl-initialized')) {
+        $(gallerySelector).owlCarousel({
+          items: 3,
+          loop: true,
+          margin: 10,
+          nav: true,
+          dots: true,
+          responsive: {
+            0: { items: 1 },
+            600: { items: 2 },
+            1000: { items: 3 }
+          }
+        });
+        $(gallerySelector).data('owl-initialized', true);
       }
-    });
-  });
+    }
+
+    function initFancybox() {
+      if (window.Fancybox) {
+        // bind once
+        Fancybox.bind('[data-fancybox="gallery"]', {
+          groupAll: true,
+          dragToClose: true,
+          animated: true,
+          preload: 1
+        });
+      }
+    }
+
+    function initGallery() {
+      initOwl();
+      initFancybox();
+    }
+
+    if ('IntersectionObserver' in window) {
+      const io = new IntersectionObserver((entries, obs) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            initGallery();
+            obs.disconnect();
+          }
+        });
+      }, { rootMargin: '300px' });
+      io.observe(galleryEl);
+    } else {
+      // fallback: small delay to let page settle
+      window.addEventListener('load', initGallery);
+    }
+  })();
 </script>
   </body>
 </html>
