@@ -973,84 +973,63 @@ Please confirm availability.`);
 
 <!-- ...other code... -->
 
-<!-- Fancybox JS (include once before </body>) -->
+<!-- REQUIRED LIBRARIES (order is IMPORTANT) -->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/owl.carousel@2.3.4/dist/owl.carousel.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox.umd.js"></script>
+
 <script>
-  Fancybox.bind('[data-fancybox="gallery"]', {
-    groupAll: true,
-    dragToClose: true,
-    animated: true,
-    preload: 1,
-    on: {
-      init: (fancybox) => {
-        // Remove potential duplicates
-        const uniqueSrcs = new Set();
-        fancybox.items = fancybox.items.filter(item => {
-          if (uniqueSrcs.has(item.src)) return false;
-          uniqueSrcs.add(item.src);
-          return true;
-        });
+(function () {
+  const gallerySelector = '.home-slider.owl-carousel';
+  const galleryEl = document.querySelector(gallerySelector);
+  if (!galleryEl) return;
+
+  let initialized = false;
+
+  function initGallery() {
+    if (initialized) return;
+    initialized = true;
+
+    /* ---------- Owl Carousel ---------- */
+    if (window.jQuery && jQuery().owlCarousel) {
+      $(gallerySelector).owlCarousel({
+        loop: true,
+        margin: 10,
+        nav: true,
+        dots: true,
+        lazyLoad: true,          // 🔥 mobile speed boost
+        smartSpeed: 600,
+        responsive: {
+          0: { items: 1 },
+          600: { items: 2 },
+          1000: { items: 3 }
+        }
+      });
+    }
+
+    /* ---------- Fancybox (bind ONLY once) ---------- */
+    if (window.Fancybox) {
+      Fancybox.bind('[data-fancybox="gallery"]', {
+        groupAll: true,
+        dragToClose: true,
+        animated: true,
+        preload: 0               // 🔥 reduces mobile load
+      });
+    }
+  }
+
+  /* ---------- Lazy init when gallery comes near viewport ---------- */
+  if ('IntersectionObserver' in window) {
+    const observer = new IntersectionObserver((entries, obs) => {
+      if (entries[0].isIntersecting) {
+        initGallery();
+        obs.disconnect();
       }
-    }
-  });
-</script><!-- ...existing code... -->
-<!-- Lazy-init gallery: initializes Owl Carousel + Fancybox only when gallery is visible -->
-<script>
-  (function() {
-    const gallerySelector = '.home-slider.owl-carousel';
-    const galleryEl = document.querySelector(gallerySelector);
-    if (!galleryEl) return;
+    }, { rootMargin: '150px' });
 
-    function initOwl() {
-      if (window.jQuery && jQuery().owlCarousel && !$(gallerySelector).data('owl-initialized')) {
-        $(gallerySelector).owlCarousel({
-          items: 3,
-          loop: true,
-          margin: 10,
-          nav: true,
-          dots: true,
-          responsive: {
-            0: { items: 1 },
-            600: { items: 2 },
-            1000: { items: 3 }
-          }
-        });
-        $(gallerySelector).data('owl-initialized', true);
-      }
-    }
-
-    function initFancybox() {
-      if (window.Fancybox) {
-        // bind once
-        Fancybox.bind('[data-fancybox="gallery"]', {
-          groupAll: true,
-          dragToClose: true,
-          animated: true,
-          preload: 1
-        });
-      }
-    }
-
-    function initGallery() {
-      initOwl();
-      initFancybox();
-    }
-
-    if ('IntersectionObserver' in window) {
-      const io = new IntersectionObserver((entries, obs) => {
-        entries.forEach(entry => {
-          if (entry.isIntersecting) {
-            initGallery();
-            obs.disconnect();
-          }
-        });
-      }, { rootMargin: '300px' });
-      io.observe(galleryEl);
-    } else {
-      // fallback: small delay to let page settle
-      window.addEventListener('load', initGallery);
-    }
-  })();
+    observer.observe(galleryEl);
+  } else {
+    window.addEventListener('load', initGallery);
+  }
+})();
 </script>
-  </body>
-</html>
